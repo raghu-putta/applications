@@ -18,7 +18,15 @@ An AI-powered LinkedIn Easy Apply assistant that helps you auto-fill forms, answ
 
 ## Run
 From `job applications/`:
-`python runAiBot.py`
+`.\venv\Scripts\python.exe runAiBot.py`
+
+### Search commands (position/title)
+- Latest jobs:
+  `.\venv\Scripts\python.exe runAiBot.py --latest --term "Python Developer"`
+- Multiple positions/titles:
+  `.\venv\Scripts\python.exe runAiBot.py --terms "Python Developer,React Developer" --date "Past week" --sort "Most recent"`
+- Limit jobs per title:
+  `.\venv\Scripts\python.exe runAiBot.py --latest --term "Selenium Developer" --switch 3`
 
 ## Contact
 Raghu Putta <raghuputta46@gmail.com>

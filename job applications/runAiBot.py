@@ -8,6 +8,8 @@ import os
 import csv
 import re
 import pyautogui
+import argparse
+import sys
 
 from random import choice, shuffle, randint
 from datetime import datetime
@@ -35,6 +37,81 @@ from typing import Literal
 
 
 pyautogui.FAILSAFE = False
+
+
+def apply_cli_overrides() -> None:
+    """
+    Optional command-line overrides for search behavior.
+
+    Examples:
+      python runAiBot.py --latest --term "Python Developer"
+      python runAiBot.py --terms "React Developer,Selenium Developer" --date "Past week" --sort "Most recent"
+    """
+    global search_terms, search_location, sort_by, date_posted
+    global cycle_date_posted, stop_date_cycle_at_24hr, run_non_stop
+    global switch_number
+
+    parser = argparse.ArgumentParser(add_help=True)
+    parser.add_argument("--term", type=str, default=None, help="Single desired job position/title (e.g. 'Python Developer').")
+    parser.add_argument(
+        "--terms",
+        type=str,
+        default=None,
+        help="Comma-separated desired job positions/titles (e.g. 'Python Developer,React Developer').",
+    )
+    parser.add_argument("--latest", action="store_true", help="Use latest jobs (date_posted='Past 24 hours', sort='Most recent').")
+    parser.add_argument(
+        "--date",
+        type=str,
+        default=None,
+        help="Date filter: Any time | Past month | Past week | Past 24 hours",
+    )
+    parser.add_argument("--sort", type=str, default=None, help="Sort: Most recent | Most relevant")
+    parser.add_argument("--location", type=str, default=None, help="Search location (fills LinkedIn location box).")
+    parser.add_argument(
+        "--switch",
+        type=int,
+        default=None,
+        help="How many jobs to try per search term before switching to next term.",
+    )
+    parser.add_argument("--no-cycle", action="store_true", help="Do not cycle date/sort on subsequent runs.")
+    parser.add_argument("--single-run", action="store_true", help="Force a single run (disable run_non_stop).")
+
+    args = parser.parse_args(sys.argv[1:])
+
+    # Terms override
+    desired_terms: list[str] = []
+    if args.term:
+        desired_terms.append(args.term)
+    if args.terms:
+        desired_terms.extend([t.strip() for t in args.terms.split(",") if t.strip()])
+    if desired_terms:
+        search_terms = desired_terms
+
+    # Simple field overrides
+    if args.location is not None and args.location.strip():
+        search_location = args.location.strip()
+    if args.sort is not None and args.sort.strip():
+        sort_by = args.sort.strip()
+    if args.date is not None and args.date.strip():
+        date_posted = args.date.strip()
+    if args.switch is not None and args.switch > 0:
+        switch_number = args.switch
+
+    # Latest convenience switch
+    if args.latest:
+        date_posted = "Past 24 hours"
+        sort_by = "Most recent"
+        # Prevent cycles so "latest" stays latest.
+        cycle_date_posted = False
+        stop_date_cycle_at_24hr = False
+
+    if args.no_cycle:
+        cycle_date_posted = False
+        stop_date_cycle_at_24hr = False
+
+    if args.single_run:
+        run_non_stop = False
 # if use_resume_generator:    from resume_generator import is_logged_in_GPT, login_GPT, open_resume_chat, create_custom_resume
 
 
@@ -1002,6 +1079,7 @@ def main() -> None:
         global linkedIn_tab, tabs_count, useNewResume, aiClient
         alert_title = "Error Occurred. Closing Browser!"
         total_runs = 1        
+        apply_cli_overrides()
         validate_config()
         
         if not os.path.exists(default_resume_path):
