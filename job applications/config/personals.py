@@ -7,9 +7,9 @@
 # >>>>>>>>>>> Easy Apply Questions & Inputs <<<<<<<<<<<
 
 # Your legal name
-first_name = "Kalyan"                 # Your first name in quotes Eg: "First", "Sai"
+first_name = "Raghu"                 # Your first name in quotes Eg: "First", "Sai"
 middle_name = ""            # Your name in quotes Eg: "Middle", "Vignesh", ""
-last_name = "G"                # Your last name in quotes Eg: "Last", "Golla"
+last_name = "Putta"                # Your last name in quotes Eg: "Last", "Golla"
 
 # Phone number (required), make sure it's valid.
 phone_number = "2143260942"        # Enter your 10 digit number in quotes Eg: "9876543210"
