@@ -1,9 +1,3 @@
-'''
-
-
-
-
-
 # from config.XdepricatedX import *
 
 __validation_file_path = ""
