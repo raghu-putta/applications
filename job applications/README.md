@@ -23,6 +23,8 @@ From `job applications/`:
 ### Search commands (position/title)
 - Latest jobs:
   `.\venv\Scripts\python.exe runAiBot.py --latest --term "Python Developer"`
+- Actively hiring + latest:
+  `.\venv\Scripts\python.exe runAiBot.py --latest --term "Python Developer" --actively-hiring`
 - Multiple positions/titles:
   `.\venv\Scripts\python.exe runAiBot.py --terms "Python Developer,React Developer" --date "Past week" --sort "Most recent"`
 - Limit jobs per title:

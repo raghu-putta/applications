@@ -50,6 +50,7 @@ def apply_cli_overrides() -> None:
     global search_terms, search_location, sort_by, date_posted
     global cycle_date_posted, stop_date_cycle_at_24hr, run_non_stop
     global switch_number
+    global actively_hiring_only
 
     parser = argparse.ArgumentParser(add_help=True)
     parser.add_argument("--term", type=str, default=None, help="Single desired job position/title (e.g. 'Python Developer').")
@@ -60,6 +61,11 @@ def apply_cli_overrides() -> None:
         help="Comma-separated desired job positions/titles (e.g. 'Python Developer,React Developer').",
     )
     parser.add_argument("--latest", action="store_true", help="Use latest jobs (date_posted='Past 24 hours', sort='Most recent').")
+    parser.add_argument(
+        "--actively-hiring",
+        action="store_true",
+        help="Enable LinkedIn 'Actively Hiring' filter before applying (requires the filter to exist on your UI).",
+    )
     parser.add_argument(
         "--date",
         type=str,
@@ -109,6 +115,11 @@ def apply_cli_overrides() -> None:
     if args.no_cycle:
         cycle_date_posted = False
         stop_date_cycle_at_24hr = False
+
+    # Filters
+    if args.actively_hiring:
+        # imported from config.search via `from config.search import *`
+        actively_hiring_only = True
 
     if args.single_run:
         run_non_stop = False
@@ -276,6 +287,9 @@ def apply_filters() -> None:
         if job_type or on_site: buffer(recommended_wait)
 
         if easy_apply_only: boolean_button_click(driver, actions, "Easy Apply")
+
+        if actively_hiring_only:
+            boolean_button_click(driver, actions, "Actively Hiring")
         
         multi_sel_noWait(driver, location)
         multi_sel_noWait(driver, industry)

@@ -102,6 +102,7 @@ def validate_search() -> None | ValueError | TypeError:
     check_string(salary, "salary")
 
     check_boolean(easy_apply_only, "easy_apply_only")
+    check_boolean(actively_hiring_only, "actively_hiring_only")
 
     check_list(experience_level, "experience_level", ["Internship", "Entry level", "Associate", "Mid-Senior level", "Director", "Executive"])
     check_list(job_type, "job_type", ["Full-time", "Part-time", "Contract", "Temporary", "Volunteer", "Internship", "Other"])
